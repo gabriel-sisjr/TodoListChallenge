@@ -16,16 +16,25 @@ namespace TodoListChallenge.Controllers
         public ToDoController(IToDoRepository repository) => _repository = repository;
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ToDoEntity toDoEntity)
+        public async Task<IActionResult> Post([FromBody] ToDoDto toDoDto)
         {
-            await _repository.InsertAsync(toDoEntity);
-            return Ok();
+            var userId = User.FindFirst(ClaimTypes.SerialNumber)?.Value!;
+            var toDoEntity = toDoDto.ToEntity(userId);
+            var response = await _repository.InsertAsync(toDoEntity);
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _repository.DeleteAsync(id);
+            return Ok();
+        }
+
+        [HttpGet("MarkAsDone/{idTodo}")]
+        public async Task<IActionResult> MarkAsDone(int idTodo)
+        {
+            await _repository.MarkAsDoneAsync(idTodo);
             return Ok();
         }
 

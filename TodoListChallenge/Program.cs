@@ -19,6 +19,8 @@ builder.Services.AddIdentity<UserApp, IdentityRole>()
 builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
 builder.Services.AddScoped<ITokenManager, TokenManager>();
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddAuthentication(cfg =>
 {
     cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -50,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseHealthChecks("/health");
 
 app.UseAuthentication();
 app.UseAuthorization();
