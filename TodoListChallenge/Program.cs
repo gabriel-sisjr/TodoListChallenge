@@ -20,6 +20,7 @@ builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
 builder.Services.AddScoped<ITokenManager, TokenManager>();
 
 builder.Services.AddHealthChecks();
+builder.Services.AddCors();
 
 builder.Services.AddAuthentication(cfg =>
 {
@@ -49,6 +50,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseCors(cors =>
+{
+    cors.AllowAnyMethod();
+    cors.AllowAnyHeader();
+    cors.AllowAnyOrigin();
+});
 
 app.UseHealthChecks("/health");
 
